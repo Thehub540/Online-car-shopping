@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Page</title>
+    <link rel="stylesheet" href="sign.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2 style="text-align:center;">Sign Up</h2>
+        <form id="signup-form">
+            <div class="input-cnt">
+                <i class="material-icons">person</i>
+                <input type="text" placeholder="Name" name="Name" required>
+            </div>
+            <div class="input-cnt">
+                <i class="material-icons">face</i>
+                <input type="text" placeholder="Username" name="Username" required>
+            </div>
+            <div class="input-cnt">
+                <i class="material-icons">email</i>
+                <input type="email" placeholder="Email" name="Email" required>
+            </div>
+            <div class="input-cnt">
+                <i class="material-icons">password</i>
+                <input type="password" placeholder="Password" name="Password" required>
+            </div>
+            <div class="input-cnt">
+                <input type="submit" value="Sign Up">
+            </div>
+        </form>
+    </div>
+
+    <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const carName = params.get("car");
+
+            document.getElementById('signup-form').addEventListener('submit', function(event) {
+                event.preventDefault(); 
+
+                sessionStorage.setItem("loggedIn", "true"); 
+                if (carName) {
+                    window.location.href = `booking.html?car=${encodeURIComponent(carName)}`;
+                } else {
+                    alert("No car selected. Redirecting to the home page.");
+                    window.location.href = "car.html"; 
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .car-details {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select, button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .receipt {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border: 1px solid #d4e9d4;
+            border-radius: 8px;
+        }
+        .receipt h3 {
+            text-align: center;
+        }
+        .receipt p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Car Booking Page</h1>
+        <div class="car-details">
+            <h2 id="car-name">Loading...</h2>
+        </div>
+        <form id="booking-form">
+            <div>
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div>
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="booking-date">Booking Date:</label>
+                <input type="date" id="booking-date" name="booking-date" required>
+            </div>
+            <div>
+                <label for="payment-method">Payment Method:</label>
+                <select id="payment-method" name="payment-method" required>
+                    <option value="" disabled selected>Select payment method</option>
+                    <option value="credit-card">Credit Card</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="mobile-money">Mobile Money</option>
+                </select>
+            </div>
+            <button type="submit">Confirm Booking</button>
+        </form>
+
+        <!-- Receipt Section -->
+        <div id="receipt" class="receipt" style="display: none;">
+            <h3>Booking Receipt</h3>
+            <p><strong>Car:</strong> <span id="receipt-car"></span></p>
+            <p><strong>Full Name:</strong> <span id="receipt-name"></span></p>
+            <p><strong>Email:</strong> <span id="receipt-email"></span></p>
+            <p><strong>Booking Date:</strong> <span id="receipt-date"></span></p>
+            <p><strong>Payment Method:</strong> <span id="receipt-payment"></span></p>
+            <p><strong>Total:</strong> <span id="receipt-total"></span></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const carName = params.get("car");
+            if (carName) {
+                document.getElementById("car-name").textContent = `Booking: ${carName}`;
+            } else {
+                document.getElementById("car-name").textContent = "No car selected!";
+            }
+
+            const bookingForm = document.getElementById("booking-form");
+            bookingForm.addEventListener("submit", (event) => {
+                event.preventDefault(); // Prevent page reload on form submission
+
+                // Get form data
+                const formData = new FormData(bookingForm);
+                const bookingDetails = {
+                    carName: carName,
+                    name: formData.get("name"),
+                    email: formData.get("email"),
+                    bookingDate: formData.get("booking-date"),
+                    paymentMethod: formData.get("payment-method"),
+                };
+
+                // Simulate booking confirmation
+                alert(`Booking confirmed for ${bookingDetails.carName} on ${bookingDetails.bookingDate}!`);
+
+                // Calculate total (for example)
+                const carPrices = {
+                    "Toyota RAV4": 15500,
+                    "Toyota Hilux": 14500,
+                    "Volkswagen Golf": 11000,
+                    "Volkswagen Jetta": 12500,
+                    "Volkswagen Touran": 13000,
+                };
+                const totalAmount = carPrices[bookingDetails.carName] || 0;
+
+                // Display receipt
+                document.getElementById("receipt-car").textContent = bookingDetails.carName;
+                document.getElementById("receipt-name").textContent = bookingDetails.name;
+                document.getElementById("receipt-email").textContent = bookingDetails.email;
+                document.getElementById("receipt-date").textContent = bookingDetails.bookingDate;
+                document.getElementById("receipt-payment").textContent = bookingDetails.paymentMethod;
+                document.getElementById("receipt-total").textContent = `Ksh ${totalAmount.toLocaleString()}`;
+
+                // Hide the form and show the receipt
+                bookingForm.style.display = "none";
+                document.getElementById("receipt").style.display = "block";
+            });
+        });
+    </script>
+</body>
+</html>

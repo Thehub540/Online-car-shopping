@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="admin.css">
+    <script src="admin.js"></script>
+</head>
+<body>
+    <div id="admin-panel">
+        <h1>Admin Dashboard</h1>
+        <h2>Cars</h2>
+        <div id="car-list"></div>
+        <form id="add-car-form">
+            <input type="text" id="car-name" placeholder="Car Name" required />
+            <input type="text" id="car-price" placeholder="Price per day" required />
+            <input type="text" id="car-category" placeholder="Category" required />
+            <input type="url" id="car-image" placeholder="Image URL" required />
+            <button type="submit">Add Car</button>
+        </form>
+        <h2>Client Bookings</h2>
+        <div id="booking-list"></div>
+    </div>
+    <script>
+        async function fetchCars() {
+            const response = await fetch("/cars");
+            const cars = await response.json();
+            document.getElementById("car-list").innerHTML = cars
+                .map(
+                    (car) =>
+                        `<div>${car.name} - ${car.price} <button onclick="deleteCar(${car.id})">Delete</button></div>`
+                )
+                .join("");
+        }
+    
+        document.getElementById("add-car-form").onsubmit = async (e) => {
+            e.preventDefault();
+            const name = document.getElementById("car-name").value;
+            const price = document.getElementById("car-price").value;
+            const category = document.getElementById("car-category").value;
+            const image = document.getElementById("car-image").value;
+    
+            const response = await fetch("/cars", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, price, category, image }),
+            });
+    
+            if (response.ok) {
+                fetchCars();
+            } else {
+                alert("Failed to add car");
+            }
+        };
+    
+        async function deleteCar(id) {
+            const response = await fetch(`/cars/${id}`, { method: "DELETE" });
+            if (response.ok) {
+                fetchCars();
+            } else {
+                alert("Failed to delete car");
+            }
+        }
+    
+        fetchCars();
+    </script>
+    
+</body>
+</html>
